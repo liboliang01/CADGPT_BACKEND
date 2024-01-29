@@ -3,6 +3,7 @@
 Anaconda + Python3.11 
 ```
 conda create -n YOUR_ENV_NAME python=3.11
+activate YOUR_ENV_NAME
 pip install -r requirements
 ```
 
