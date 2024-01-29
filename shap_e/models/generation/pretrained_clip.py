@@ -32,7 +32,7 @@ class ImageCLIP(nn.Module):
         self.ensure_used_params = ensure_used_params
 
         # Lazy import because of torchvision.
-        import clip
+        from clip import clip
 
         self.clip_model, self.preprocess = clip.load(
             clip_name, device=device, download_root=cache_dir or default_cache_dir()

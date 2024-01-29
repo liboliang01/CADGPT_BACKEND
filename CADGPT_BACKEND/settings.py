@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "backend",
-    "shap_e"
+    "shap_e",
+    "clip"
 ]
 
 MIDDLEWARE = [
