@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import time
 
 # Create your views here.
 from django.http import FileResponse
@@ -28,6 +29,8 @@ def get_model(request):
 
 @api_view(['GET'])
 def get_model_shap_e(request):
+    message = request.GET.get('message',default='a shark')
+    print(message)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     xm = load_model('transmitter', device=device)
     model = load_model('text300M', device=device)
@@ -35,7 +38,7 @@ def get_model_shap_e(request):
     
     batch_size = 1
     guidance_scale = 15.0
-    prompt = "a shark"
+    prompt = message
 
     latents = sample_latents(
         batch_size=batch_size,
@@ -52,11 +55,14 @@ def get_model_shap_e(request):
         sigma_max=160,
         s_churn=0,
     )
+    
+    timestamp = int(time.time())
 
     for i, latent in enumerate(latents):
         t = decode_latent_mesh(xm, latent).tri_mesh()
-        with open(f'./backend/output/example_mesh_{i}.ply', 'wb') as f:
+        with open(f'./backend/output/{timestamp}_mesh_{i}.ply', 'wb') as f:
             t.write_ply(f)
-        with open(f'./backend/output/example_mesh_{i}.obj', 'w') as f:
+        with open(f'./backend/output/{timestamp}_mesh_{i}.obj', 'w') as f:
             t.write_obj(f)
-    return FileResponse(open(r"./backend/output/example_mesh_0.obj", "rb"))
+    file_path = rf'./backend/output/{timestamp}_mesh_0.obj'
+    return FileResponse(open(file_path, "rb"))
