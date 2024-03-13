@@ -25,7 +25,7 @@ def index(request):
 
 @api_view(['GET'])
 def get_model(request):
-    return FileResponse(open(r"./backend/models/Skull.zip", "rb"))
+    return FileResponse(open(r"./backend/models/example.obj", "rb"))
 
 @api_view(['GET'])
 def get_model_shap_e(request):
@@ -57,12 +57,13 @@ def get_model_shap_e(request):
     )
     
     timestamp = int(time.time())
+    output_dir = os.path.join(os.getcwd(),'output')
+    if not os.path.exists(output_dir): os.makedirs(output_dir)
 
     for i, latent in enumerate(latents):
+        output_path = os.path.join(output_dir, f'{timestamp}_mesh_{i}.obj')
         t = decode_latent_mesh(xm, latent).tri_mesh()
-        with open(f'./backend/output/{timestamp}_mesh_{i}.ply', 'wb') as f:
-            t.write_ply(f)
-        with open(f'./backend/output/{timestamp}_mesh_{i}.obj', 'w') as f:
+        with open(output_path, 'w') as f:
             t.write_obj(f)
-    file_path = rf'./backend/output/{timestamp}_mesh_0.obj'
-    return FileResponse(open(file_path, "rb"))
+    output_path = os.path.join(output_dir, f'{timestamp}_mesh_0.obj')
+    return FileResponse(open(output_path, "rb"))
