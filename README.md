@@ -19,3 +19,6 @@ start /min python manage.py runserver 0.0.0.0:8001
 docker pull 18830650372/cadgpt_backend:latest
 docker run -p 8001:8001 -d 18830650372/cadgpt_backend:latest
 ```
+
+# CADgpt 
+https://github.com/kwlaial/CADgpt
